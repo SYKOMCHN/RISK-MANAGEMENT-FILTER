@@ -1,10 +1,10 @@
 # RISK-MANAGEMENT-FILTER
 
-##to install -
+## to install -
 $pip install streamlit
 
-##to verify -
+## to verify -
 $streamlit hello
 
-##to run -
+## to run -
 streamlit run app.py
