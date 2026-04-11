@@ -1,0 +1,11 @@
+# Ignore generated database files
+mock_hr_database.csv
+*.csv
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+venv/
+env/
