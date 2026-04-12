@@ -81,7 +81,6 @@ with col2:
         with st.spinner("Fetching blocks from Storage Tier..."):
             
             time.sleep(1) 
-            
             secure_subset, dummies_used = oblivious_fetch(df, target_dept, num_dummies=2)
             
         st.info(f"**Access Pattern Masked:** To hide the true target, the proxy simultaneously fetched dummy blocks for `{dummies_used[0]}` and `{dummies_used[1]}`.")
@@ -90,10 +89,13 @@ with col2:
         st.markdown("Stage 2: Threat Assessment")
         is_safe, subset_size = evaluate_k_anonymity(secure_subset, k_threshold)
         
+        #Get the standard (CPU)
         if not is_safe:
             # THREAT DETECTED: Halt execution
             st.error(f" **PRIVACY THREAT DETECTED:** The query isolated {subset_size} records, falling below the strict K-Anonymity threshold of {k_threshold}.")
             st.error(" **ACTION:** Access Denied. Query terminated to prevent re-identification attack.")
+            failed_time = time.time() - route
+            st.error(f" **FAILED QUERY TIME:** {failed_time} sec")
             st.stop()
         else:
             # SAFE
@@ -102,9 +104,8 @@ with col2:
         #DIFFERENTIAL PRIVACY INJECTION
         st.markdown("Stage 3: Differential Privacy Injection")
         
-        #Get the standard (CPU)
-        standard = time.time()
 
+        standard = time.time()
         # Calculate true value (Vulnerable)
         true_average = secure_subset['Salary'].mean()
         
