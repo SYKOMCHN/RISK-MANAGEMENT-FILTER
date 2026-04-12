@@ -76,6 +76,8 @@ with col2:
         # OBLIVIOUS FETCH
         st.markdown("Stage 1: Oblivious Data Retrieval")
         
+        #Get the Routed (APS) 
+        route = time.time()
         with st.spinner("Fetching blocks from Storage Tier..."):
             
             time.sleep(1) 
@@ -100,6 +102,9 @@ with col2:
         #DIFFERENTIAL PRIVACY INJECTION
         st.markdown("Stage 3: Differential Privacy Injection")
         
+        #Get the standard (CPU)
+        standard = time.time()
+
         # Calculate true value (Vulnerable)
         true_average = secure_subset['Salary'].mean()
         
@@ -115,6 +120,25 @@ with col2:
         #FINAL OUTPUT TO USER
         st.markdown("---")
         st.markdown("Final Released Data (Client View)")
+
+        #CPU vs Routed time
+        standard_time = time.time() - standard
+        routed_time = time.time() - route
+
+        # Display
+        colA, colB = st.columns(2)
+
+        colA.metric(
+            label="Standard Query Time (CPU)",
+            value=f"{standard_time:.6f} sec"
+        )
+
+        colB.metric(
+            label="APS Routed Time",
+            value=f"{routed_time:.6f} sec"
+        )
+
+        st.write("Overhead (APS - Standard):", f"{routed_time - standard_time:.6f} sec")
         
         # Display the metrics side-by-side
         metric_col1, metric_col2 = st.columns(2)
