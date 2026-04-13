@@ -10,6 +10,7 @@ from src.diff_privacy import calculate_sensitivity, apply_laplace_noise
 # ==========================================
 st.set_page_config(page_title="Adaptive Privacy Shield", page_icon="🛡️", layout="wide")
 
+
 @st.cache_data
 def load_data():
     #Load mock database
@@ -44,44 +45,66 @@ st.sidebar.info(" **Demo Tip:** Try querying 'Engineering' (Safe) vs 'Executive'
 
 # ==========================================
 # DASHBOARD HEADER
-st.title("Adaptive Privacy Shield")
-st.markdown("### A Middle-Layer Defense Mechanism for Big Data Queries")
-st.write("This dashboard demonstrates a multi-tier defense architecture protecting a backend HR database from re-identification and access pattern attacks.")
+#st.title("Adaptive Privacy Shield")
+st.markdown("""
+            <div style='text-align: center;'>
+                <h1>Adaptive Privacy Shield</h1>
+                <h3>A Middle-Layer Defense Mechanism for Big Data Queries</h3> 
+                <p style = 'font-weight: bold;'>This dashboard demonstrates a multi-tier defense architecture protecting a backend HR database from re-identification and access pattern attacks.</p>
+                <br>
+            </div
+            """, unsafe_allow_html=True)
+
+#st.markdown(" A Middle-Layer Defense Mechanism for Big Data Queries")
+#st.write("This dashboard demonstrates a multi-tier defense architecture protecting a backend HR database from re-identification and access pattern attacks.")
 
 # Create a layout with two columns
-col1, col2 = st.columns([1, 2])
+#col1, col2 = st.columns([1, 2])
 
 
 # interface build with cols
-with col1:
+#with col1:
     
-    st.subheader("1. Client Interface")
-    st.write("Submit an aggregate request to the database.")
+st.subheader("Client Interface")
+st.write("Submit an aggregate request to the database.")
     
     # Dropdown to select the target demographic
-    target_dept = st.selectbox("Target Demographic (Department):", df['Department'].unique())
+target_dept = st.selectbox("Target Demographic (Department):", df['Department'].unique())
     
     # hardcoded 'AVERAGE Salary' for this demo
     # but the backend supports COUNT as well.
-    st.text_input("Query Type:", value="AVERAGE(Salary)", disabled=True)
+st.text_input("Query Type:", value="AVERAGE(Salary)", disabled=True)
+
+st.markdown("""
+    <style>
+        .stButton > button {
+            height: 40px;
+            width: 4px
+            font-size: 20px;
+            padding: 10px 40px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+execute_btn = st.button("Execute Secure Query", type="primary", use_container_width=True)
+st.markdown("""
+            <br><br>
+            """, unsafe_allow_html=True)
     
-    execute_btn = st.button("Execute Secure Query", type="primary", use_container_width=True)
+#with col2:
     
+st.subheader("Middle-Layer Proxy Pipeline")
     
-with col2:
-    
-    st.subheader("2. Middle-Layer Proxy Pipeline")
-    
-    if execute_btn:
+if execute_btn:
         # OBLIVIOUS FETCH
-        st.markdown("Stage 1: Oblivious Data Retrieval")
+    st.markdown("Stage 1: Oblivious Data Retrieval")
         
         #Get the Routed (APS) 
-        route = time.time()
-        with st.spinner("Fetching blocks from Storage Tier..."):
+    route = time.time()
+    with st.spinner("Fetching blocks from Storage Tier..."):
             
-            time.sleep(1) 
-            secure_subset, dummies_used = oblivious_fetch(df, target_dept, num_dummies=2)
+        time.sleep(1) 
+        secure_subset, dummies_used = oblivious_fetch(df, target_dept, num_dummies=2)
             
         st.info(f"**Access Pattern Masked:** To hide the true target, the proxy simultaneously fetched dummy blocks for `{dummies_used[0]}` and `{dummies_used[1]}`.")
         
